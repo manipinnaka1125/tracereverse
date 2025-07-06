@@ -1,52 +1,22 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronRightIcon, CodeBracketIcon, AcademicCapIcon, StarIcon } from "@heroicons/react/24/outline";
 import { projects } from "@/content/projects";
 import { learningPaths } from "@/lib/learning-paths";
 import { ProjectCard } from "@/components/ProjectCard";
 
 export default function Home() {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   
   const stats = {
     totalProjects: projects.length,
-    githubStars: 2400,
+    githubStars: 0, // Real GitHub stars will be updated when repo is live
     learningPaths: learningPaths.length,
     openSource: 100
   };
 
   const featuredProjects = projects.slice(0, 6);
   const featuredPaths = learningPaths.slice(0, 3);
-
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      role: "Frontend Developer at Google",
-      content: "TraceReverse helped me understand how modern web apps are built. The reverse engineering approach is brilliant!",
-      avatar: "👩‍💻"
-    },
-    {
-      name: "Marcus Rodriguez",
-      role: "Full Stack Engineer",
-      content: "I learned so much by studying real projects. The hands-on approach is unmatched.",
-      avatar: "👨‍💻"
-    },
-    {
-      name: "Aisha Patel",
-      role: "React Developer",
-      content: "Finally, a platform that teaches by showing real code instead of toy examples. Game changer!",
-      avatar: "👩‍🎓"
-    }
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -143,7 +113,7 @@ export default function Home() {
               <div className="text-sm text-muted-foreground">Learning Paths</div>
             </div>
             <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-border/20">
-              <div className="text-2xl font-bold text-primary">{stats.githubStars.toLocaleString()}</div>
+              <div className="text-2xl font-bold text-primary">{stats.githubStars}+</div>
               <div className="text-sm text-muted-foreground">GitHub Stars</div>
             </div>
             <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-border/20">
@@ -302,62 +272,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="px-6 py-16">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-foreground">What Developers Say</h2>
-            <p className="text-muted-foreground">
-              Join thousands of developers who learned by reverse engineering
-            </p>
-          </div>
-          
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentTestimonial}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5 }}
-                className="bg-background rounded-xl p-8 border border-border text-center"
-              >
-                <div className="text-4xl mb-4">{testimonials[currentTestimonial].avatar}</div>
-                <blockquote className="text-lg text-muted-foreground mb-4">
-                  "{testimonials[currentTestimonial].content}"
-                </blockquote>
-                <div className="font-semibold text-foreground">
-                  {testimonials[currentTestimonial].name}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {testimonials[currentTestimonial].role}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-            
-            <div className="flex justify-center mt-6 gap-2">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentTestimonial(index)}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentTestimonial ? 'bg-primary' : 'bg-muted'
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="px-6 py-20 bg-gradient-to-r from-primary/10 to-secondary/10">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6 text-foreground">
-            Ready to Learn by Doing?
+            Ready to Learn by Reverse Engineering?
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Start reverse engineering real projects today. No signup required, completely free.
+            Start studying real-world projects today. No signup required, completely free and open source.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/projects">

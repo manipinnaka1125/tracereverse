@@ -14,7 +14,6 @@ export const projects = [
       "File upload functionality"
     ],
     stack: ["Next.js", "React", "Supabase", "TypeScript", "Tailwind CSS", "PostgreSQL"],
-    image: "/images/spotify-clone.jpg",
     difficulty: "advanced" as const,
     estimatedTime: "8-12 hours",
     category: "Full Stack",
@@ -58,7 +57,6 @@ export const projects = [
       "Dark/Light mode"
     ],
     stack: ["Next.js", "React", "Socket.io", "Prisma", "MySQL", "TypeScript"],
-    image: "/images/discord-clone.jpg",
     difficulty: "advanced" as const,
     estimatedTime: "10-15 hours",
     category: "Real-time Apps",
@@ -101,7 +99,6 @@ export const projects = [
       "Review system"
     ],
     stack: ["Next.js", "React", "Prisma", "MongoDB", "NextAuth.js", "Cloudinary"],
-    image: "/images/airbnb-clone.jpg",
     difficulty: "intermediate" as const,
     estimatedTime: "6-10 hours",
     category: "E-commerce",

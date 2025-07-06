@@ -32,38 +32,29 @@ export function ProjectCard({ project }: { project: Project }) {
       transition={{ duration: 0.2 }}
       className="bg-background rounded-xl border border-border overflow-hidden hover:border-primary/50 transition-all duration-200 hover:shadow-lg"
     >
-      {/* Project Image */}
-      <div className="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden">
-        {project.image ? (
-          <img 
-            src={project.image} 
-            alt={project.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <CodeBracketIcon className="w-16 h-16 text-primary/50" />
-          </div>
-        )}
-        
+      {/* Header with difficulty badge */}
+      <div className="p-6 bg-gradient-to-br from-primary/5 to-secondary/5 border-b border-border/50 relative">
         {/* Difficulty Badge */}
         {project.difficulty && (
-          <div className="absolute top-3 right-3">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(project.difficulty)}`}>
+          <div className="absolute top-4 right-4">
+            <span className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(project.difficulty)}`}>
               {project.difficulty}
             </span>
           </div>
         )}
+        
+        {/* Project Icon */}
+        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+          <CodeBracketIcon className="w-6 h-6 text-primary" />
+        </div>
+        
+        {/* Title and tagline */}
+        <h3 className="text-xl font-semibold text-foreground mb-2">{project.title}</h3>
+        <p className="text-sm text-primary font-medium">{project.tagline}</p>
       </div>
 
       {/* Content */}
       <div className="p-6">
-        {/* Header */}
-        <div className="mb-3">
-          <h3 className="text-xl font-semibold text-foreground mb-1">{project.title}</h3>
-          <p className="text-sm text-primary font-medium">{project.tagline}</p>
-        </div>
-
         {/* Description */}
         <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
           {project.description}
