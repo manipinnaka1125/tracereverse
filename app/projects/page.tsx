@@ -1,244 +1,244 @@
 "use client";
-import { projects } from "@/content/projects";
-import { ProjectCard } from "@/components/ProjectCard";
-import { useState, useEffect } from "react";
-import { ProjectSearchEngine, SearchFilters } from '@/lib/search';
+import { useState } from 'react';
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { 
+  LockClosedIcon,
+  RocketLaunchIcon,
+  CheckCircleIcon,
+  ClockIcon
+} from "@heroicons/react/24/outline";
 
 export default function ProjectsPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStack, setSelectedStack] = useState<string>("");
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("");
-  const [selectedDuration, setSelectedDuration] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("relevance");
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [filteredProjects, setFilteredProjects] = useState(projects);
-  const [isSearchInitialized, setIsSearchInitialized] = useState(false);
+  const [isUnlocked] = useState(false); // Will be true when user completes fundamentals
 
-  // Initialize search engine
-  useEffect(() => {
-    ProjectSearchEngine.initializeSearch().then(() => {
-      setIsSearchInitialized(true);
-    });
-  }, []);
-
-  // Get filter options
-  const { allStacks, difficulties, durations } = ProjectSearchEngine.getFilterOptions();
-
-  // Apply filters
-  useEffect(() => {
-    if (!isSearchInitialized) return;
-
-    const filters: Partial<SearchFilters> = {
-      query: searchTerm,
-      stack: selectedStack ? [selectedStack] : [],
-      difficulty: selectedDifficulty ? [selectedDifficulty] : [],
-      duration: selectedDuration ? [selectedDuration] : [],
-      sortBy: sortBy as any
-    };
-
-    const results = ProjectSearchEngine.searchProjects(filters);
-    setFilteredProjects(results.map(r => r.project));
-  }, [searchTerm, selectedStack, selectedDifficulty, selectedDuration, sortBy, isSearchInitialized]);
-
-  const clearFilters = () => {
-    setSearchTerm("");
-    setSelectedStack("");
-    setSelectedDifficulty("");
-    setSelectedDuration("");
-    setSortBy("relevance");
-  };
-
-  const hasActiveFilters = searchTerm || selectedStack || selectedDifficulty || selectedDuration || sortBy !== "relevance";
+  const projects = [
+    {
+      id: 'spotify-clone',
+      title: 'Spotify Clone',
+      description: 'Full-featured music streaming app with playlists, search, and audio player.',
+      image: '/images/spotify-preview.jpg',
+      difficulty: 'Advanced',
+      technologies: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Spotify API'],
+      estimatedTime: '40-50 hours',
+      prerequisites: ['HTML/CSS Mastery', 'JavaScript Fundamentals', 'React Basics']
+    },
+    {
+      id: 'discord-clone',
+      title: 'Discord Clone',
+      description: 'Real-time chat application with servers, channels, and voice chat.',
+      image: '/images/discord-preview.jpg',
+      difficulty: 'Expert',
+      technologies: ['React', 'Next.js', 'Socket.io', 'Node.js', 'MongoDB'],
+      estimatedTime: '60-70 hours',
+      prerequisites: ['HTML/CSS Mastery', 'JavaScript Fundamentals', 'React Advanced']
+    },
+    {
+      id: 'airbnb-clone',
+      title: 'Airbnb Clone',
+      description: 'Property rental platform with booking system and user profiles.',
+      image: '/images/airbnb-preview.jpg',
+      difficulty: 'Advanced',
+      technologies: ['React', 'Next.js', 'Prisma', 'PostgreSQL', 'Stripe API'],
+      estimatedTime: '50-60 hours',
+      prerequisites: ['HTML/CSS Mastery', 'JavaScript Fundamentals', 'React Basics']
+    },
+    {
+      id: 'netflix-clone',
+      title: 'Netflix Clone',
+      description: 'Video streaming platform with user authentication and recommendations.',
+      image: '/images/netflix-preview.jpg',
+      difficulty: 'Expert',
+      technologies: ['React', 'Next.js', 'Firebase', 'TMDB API', 'Video.js'],
+      estimatedTime: '45-55 hours',
+      prerequisites: ['HTML/CSS Mastery', 'JavaScript Fundamentals', 'React Advanced']
+    },
+    {
+      id: 'ecommerce-store',
+      title: 'E-commerce Store',
+      description: 'Complete online store with cart, checkout, and admin dashboard.',
+      image: '/images/ecommerce-preview.jpg',
+      difficulty: 'Advanced',
+      technologies: ['React', 'Next.js', 'Stripe', 'Sanity CMS', 'TypeScript'],
+      estimatedTime: '55-65 hours',
+      prerequisites: ['HTML/CSS Mastery', 'JavaScript Fundamentals', 'React Basics']
+    },
+    {
+      id: 'twitter-clone',
+      title: 'Twitter Clone',
+      description: 'Social media platform with posts, likes, follows, and real-time updates.',
+      image: '/images/twitter-preview.jpg',
+      difficulty: 'Advanced',
+      technologies: ['React', 'Next.js', 'Supabase', 'PostgreSQL', 'Real-time'],
+      estimatedTime: '40-50 hours',
+      prerequisites: ['HTML/CSS Mastery', 'JavaScript Fundamentals', 'React Basics']
+    }
+  ];
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4 text-foreground">
-          Explore Projects 🎯
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Clone, study, and rebuild these hand-picked real-world projects. 
-          Each comes with step-by-step instructions and learning objectives.
-        </p>
-      </div>
-
-      {/* Search and Filter Controls */}
-      <div className="bg-card border border-border rounded-xl p-6 mb-8">
-        {/* Search Bar */}
-        <div className="flex flex-col lg:flex-row gap-4 mb-6">
-          <div className="flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              placeholder="Search projects, technologies, concepts..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
-            />
-          </div>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="px-6 py-16 text-center bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+        <div className="max-w-4xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl mb-6"
+          >
+            🚀
+          </motion.div>
           
-          {/* View Toggle */}
-          <div className="flex border border-border rounded-lg overflow-hidden">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`px-4 py-3 flex items-center gap-2 ${viewMode === 'grid' ? 'bg-primary text-white' : 'bg-background text-foreground hover:bg-muted'} transition-colors`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-              </svg>
-              Grid
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`px-4 py-3 flex items-center gap-2 ${viewMode === 'list' ? 'bg-primary text-white' : 'bg-background text-foreground hover:bg-muted'} transition-colors`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
-              List
-            </button>
-          </div>
-        </div>
-
-        {/* Filters Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          <select
-            value={selectedStack}
-            onChange={(e) => setSelectedStack(e.target.value)}
-            className="px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
-          >
-            <option value="">All Technologies</option>
-            {allStacks.map(stack => (
-              <option key={stack} value={stack}>{stack}</option>
-            ))}
-          </select>
-
-          <select
-            value={selectedDifficulty}
-            onChange={(e) => setSelectedDifficulty(e.target.value)}
-            className="px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
-          >
-            <option value="">All Levels</option>
-            {difficulties.map(diff => (
-              <option key={diff} value={diff}>
-                {diff.charAt(0).toUpperCase() + diff.slice(1)}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={selectedDuration}
-            onChange={(e) => setSelectedDuration(e.target.value)}
-            className="px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
-          >
-            <option value="">Any Duration</option>
-            {durations.map(duration => (
-              <option key={duration} value={duration}>
-                {duration === 'short' ? '< 8 hours' : duration === 'medium' ? '8-20 hours' : '20+ hours'}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
-          >
-            <option value="relevance">Relevance</option>
-            <option value="difficulty">Difficulty</option>
-            <option value="duration">Duration</option>
-            <option value="popularity">Popularity</option>
-            <option value="newest">Newest</option>
-          </select>
-
-          {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="px-4 py-3 border border-border rounded-lg hover:bg-muted transition-colors text-foreground flex items-center justify-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Clear
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Results Count and Active Filters */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
-          <p className="text-muted-foreground">
-            {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''} found
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+            Advanced <span className="text-primary">Projects</span>
+          </h1>
+          
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Real-world projects that mirror popular applications. Build your portfolio with industry-standard code.
           </p>
-          
-          {/* Active Filters */}
-          {hasActiveFilters && (
-            <div className="flex flex-wrap gap-2">
-              {searchTerm && (
-                <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
-                  "{searchTerm}"
-                </span>
-              )}
-              {selectedStack && (
-                <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
-                  {selectedStack}
-                </span>
-              )}
-              {selectedDifficulty && (
-                <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
-                  {selectedDifficulty}
-                </span>
-              )}
-              {selectedDuration && (
-                <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
-                  {selectedDuration === 'short' ? '< 8h' : selectedDuration === 'medium' ? '8-20h' : '20h+'}
-                </span>
-              )}
+
+          {!isUnlocked && (
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-6 mb-8">
+              <LockClosedIcon className="w-8 h-8 text-amber-600 mx-auto mb-2" />
+              <p className="text-amber-800 dark:text-amber-200 font-medium mb-2">
+                🔒 Complete the fundamentals first!
+              </p>
+              <p className="text-amber-700 dark:text-amber-300 text-sm">
+                Master HTML, CSS, JavaScript & React basics in our{" "}
+                <Link href="/learn" className="underline font-medium">
+                  Learning Path
+                </Link>{" "}
+                to unlock these advanced projects.
+              </p>
             </div>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* Projects Grid/List */}
-      {filteredProjects.length > 0 ? (
-        <div className={
-          viewMode === 'grid' 
-            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            : "space-y-4"
-        }>
-          {filteredProjects.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
-          ))}
+      {/* Projects Grid */}
+      <section className="px-6 py-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="relative group"
+              >
+                <div className={`bg-background rounded-xl border border-border overflow-hidden transition-all duration-300 hover:shadow-lg ${
+                  !isUnlocked ? 'opacity-60' : ''
+                }`}>
+                  {/* Project Image Placeholder */}
+                  <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center relative">
+                    <div className="text-6xl">
+                      {project.id === 'spotify-clone' ? '🎵' :
+                       project.id === 'discord-clone' ? '💬' :
+                       project.id === 'airbnb-clone' ? '🏠' :
+                       project.id === 'netflix-clone' ? '🎬' :
+                       project.id === 'ecommerce-store' ? '🛍️' : '🐦'}
+                    </div>
+                    {!isUnlocked && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <LockClosedIcon className="w-12 h-12 text-white" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-6">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-xl font-semibold text-foreground">{project.title}</h3>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        project.difficulty === 'Expert' 
+                          ? 'bg-red-100 text-red-700 dark:bg-red-900/20' 
+                          : 'bg-blue-100 text-blue-700 dark:bg-blue-900/20'
+                      }`}>
+                        {project.difficulty}
+                      </span>
+                    </div>
+
+                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                      {project.description}
+                    </p>
+
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                      <ClockIcon className="w-4 h-4" />
+                      <span>{project.estimatedTime}</span>
+                    </div>
+
+                    {/* Technologies */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.technologies.slice(0, 3).map((tech, idx) => (
+                        <span key={idx} className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technologies.length > 3 && (
+                        <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded">
+                          +{project.technologies.length - 3} more
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Prerequisites */}
+                    <div className="border-t border-border pt-4">
+                      <p className="text-xs font-medium text-muted-foreground mb-2">Prerequisites:</p>
+                      <div className="space-y-1">
+                        {project.prerequisites.map((prereq, idx) => (
+                          <div key={idx} className="flex items-center gap-2 text-xs">
+                            <CheckCircleIcon className="w-3 h-3 text-green-500" />
+                            <span className="text-muted-foreground">{prereq}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="mt-6">
+                      {isUnlocked ? (
+                        <Link 
+                          href={`/projects/${project.id}`}
+                          className="w-full block text-center bg-primary text-white py-2 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                        >
+                          Start Project
+                        </Link>
+                      ) : (
+                        <button 
+                          disabled
+                          className="w-full bg-muted text-muted-foreground py-2 px-4 rounded-lg font-medium cursor-not-allowed"
+                        >
+                          Complete Fundamentals First
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      ) : (
-        <div className="text-center py-16">
-          <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-xl font-semibold mb-2 text-foreground">No projects found</h3>
-          <p className="text-muted-foreground mb-6">
-            Try adjusting your search terms or filters
+      </section>
+
+      {/* Call to Action */}
+      <section className="px-6 py-16 bg-gradient-to-r from-primary/10 to-secondary/10">
+        <div className="max-w-4xl mx-auto text-center">
+          <RocketLaunchIcon className="w-16 h-16 text-primary mx-auto mb-6" />
+          <h2 className="text-3xl font-bold mb-4 text-foreground">
+            Ready to Build Something Amazing?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-8">
+            Start with our comprehensive learning path to master the fundamentals, 
+            then come back to tackle these industry-level projects.
           </p>
-          <button
-            onClick={clearFilters}
-            className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+          <Link 
+            href="/learn"
+            className="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
           >
-            Clear all filters
-          </button>
+            Begin Learning Journey
+            <CheckCircleIcon className="w-5 h-5" />
+          </Link>
         </div>
-      )}
-
-      {/* Loading State */}
-      {!isSearchInitialized && (
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground mt-2">Initializing search...</p>
-        </div>
-      )}
+      </section>
     </div>
   );
 }
